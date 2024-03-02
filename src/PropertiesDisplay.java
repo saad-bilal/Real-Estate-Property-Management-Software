@@ -1,3 +1,4 @@
+// Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -12,18 +13,24 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+// Class to display properties in a table
 public class PropertiesDisplay {
+    // Stage on which the current scene will be shown
     private Stage stage;
 
+    // Constructor that initializes the stage
     public PropertiesDisplay(Stage stage) {
         this.stage = stage;
     }
 
+    // Method to show the properties in a table
     public void showProperties() {
         // Create a TableView to display the properties
         TableView<Property> propertiesTable = new TableView<>();
 
-        // Define the columns
+        // Define the columns for the table
+        // Each column represents a field in the Property class
+        // The PropertyValueFactory uses the getter methods in the Property class to populate the columns
         TableColumn<Property, Integer> idColumn = new TableColumn<>("Property ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -45,14 +52,16 @@ public class PropertiesDisplay {
         // Add the columns to the TableView
         propertiesTable.getColumns().addAll(idColumn, typeColumn, sizeColumn, locationColumn, priceColumn, furnishingStatusColumn);
 
-
         // Retrieve properties from the database
         ObservableList<Property> properties = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
              Statement stmt = con.createStatement()) {
+            // Execute a SQL query to retrieve the properties
             ResultSet rs = stmt.executeQuery("SELECT PropertyID, Type, Size, Location, Price, FurnishingStatus FROM Property");
             while (rs.next()) {
+                // Create a Property object for each row in the result set
                 Property property = new Property(rs.getInt("PropertyID"), rs.getString("Type"), rs.getString("Size"), rs.getString("Location"), rs.getString("Price"), rs.getString("FurnishingStatus"));
+                // Add the Property object to the ObservableList
                 properties.add(property);
             }
         } catch (Exception e) {
@@ -84,6 +93,7 @@ public class PropertiesDisplay {
 
     // Property class to hold the data for each property
     public static class Property {
+        // Fields for each column in the properties table
         private final int id;
         private final String type;
         private final String size;
@@ -91,6 +101,7 @@ public class PropertiesDisplay {
         private final String price;
         private final String furnishingStatus;
 
+        // Constructor that initializes the fields
         public Property(int id, String type, String size, String location, String price, String furnishingStatus) {
             this.id = id;
             this.type = type;
@@ -100,6 +111,7 @@ public class PropertiesDisplay {
             this.furnishingStatus = furnishingStatus;
         }
 
+        // Getter methods for each field
         public int getId() { return id; }
         public String getType() { return type; }
         public String getSize() { return size; }

@@ -1,4 +1,4 @@
-// DisplayOptions.java
+// Import necessary JavaFX classes
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -6,13 +6,17 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+// This class represents the display options in the application
 public class DisplayOptions {
+    // Stage on which the current scene will be shown
     private Stage stage;
 
+    // Constructor that initializes the stage
     public DisplayOptions(Stage stage) {
         this.stage = stage;
     }
 
+    // Method to show the options to the user
     public void showOptions() {
         // Create a VBox layout for the options
         VBox layout = new VBox(10);

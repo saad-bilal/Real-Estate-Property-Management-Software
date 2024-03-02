@@ -1,3 +1,4 @@
+// Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -12,18 +13,24 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+// Class to display payments in a table
 public class PaymentsDisplay {
+    // Stage on which the current scene will be shown
     private Stage stage;
 
+    // Constructor that initializes the stage
     public PaymentsDisplay(Stage stage) {
         this.stage = stage;
     }
 
+    // Method to show the payments in a table
     public void showPayments() {
         // Create a TableView to display the payments
         TableView<Payment> paymentsTable = new TableView<>();
 
-        // Define the columns
+        // Define the columns for the table
+        // Each column represents a field in the Payment class
+        // The PropertyValueFactory uses the getter methods in the Payment class to populate the columns
         TableColumn<Payment, Integer> idColumn = new TableColumn<>("Payment ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -48,19 +55,19 @@ public class PaymentsDisplay {
         TableColumn<Payment, String> receiptNumberColumn = new TableColumn<>("Receipt Number");
         receiptNumberColumn.setCellValueFactory(new PropertyValueFactory<>("receiptNumber"));
 
-        // Add more columns as needed for other payment details
-
         // Add the columns to the TableView
         paymentsTable.getColumns().addAll(idColumn, leaseIDColumn, tenantIDColumn, paymentDateColumn, amountColumn, paymentTypeColumn, descriptionColumn, receiptNumberColumn);
-
 
         // Retrieve payments from the database
         ObservableList<Payment> payments = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
              Statement stmt = con.createStatement()) {
+            // Execute a SQL query to retrieve the payments
             ResultSet rs = stmt.executeQuery("SELECT PaymentID, LeaseID, TenantID, PaymentDate, Amount, PaymentType, Description, ReceiptNumber FROM Payments");
             while (rs.next()) {
+                // Create a Payment object for each row in the result set
                 Payment payment = new Payment(rs.getInt("PaymentID"), rs.getInt("LeaseID"), rs.getInt("TenantID"), rs.getDate("PaymentDate"), rs.getString("Amount"), rs.getString("PaymentType"), rs.getString("Description"), rs.getString("ReceiptNumber"));
+                // Add the Payment object to the ObservableList
                 payments.add(payment);
             }
         } catch (Exception e) {
@@ -92,6 +99,7 @@ public class PaymentsDisplay {
 
     // Payment class to hold the data for each payment
     public static class Payment {
+        // Fields for each column in the payments table
         private final int id;
         private final int leaseID;
         private final int tenantID;
@@ -101,6 +109,7 @@ public class PaymentsDisplay {
         private final String description;
         private final String receiptNumber;
 
+        // Constructor that initializes the fields
         public Payment(int id, int leaseID, int tenantID, java.sql.Date paymentDate, String amount, String paymentType, String description, String receiptNumber) {
             this.id = id;
             this.leaseID = leaseID;
@@ -112,6 +121,7 @@ public class PaymentsDisplay {
             this.receiptNumber = receiptNumber;
         }
 
+        // Getter methods for each field
         public int getId() { return id; }
         public int getLeaseID() { return leaseID; }
         public int getTenantID() { return tenantID; }

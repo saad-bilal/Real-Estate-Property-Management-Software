@@ -1,3 +1,4 @@
+// Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -12,18 +13,24 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+// Class to display maintenance requests in a table
 public class MaintenanceRequestsDisplay {
+    // Stage on which the current scene will be shown
     private Stage stage;
 
+    // Constructor that initializes the stage
     public MaintenanceRequestsDisplay(Stage stage) {
         this.stage = stage;
     }
 
+    // Method to show the maintenance requests in a table
     public void showMaintenanceRequests() {
         // Create a TableView to display the maintenance requests
         TableView<MaintenanceRequest> maintenanceRequestsTable = new TableView<>();
 
-        // Define the columns
+        // Define the columns for the table
+        // Each column represents a field in the MaintenanceRequest class
+        // The PropertyValueFactory uses the getter methods in the MaintenanceRequest class to populate the columns
         TableColumn<MaintenanceRequest, Integer> idColumn = new TableColumn<>("Request ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -48,18 +55,19 @@ public class MaintenanceRequestsDisplay {
         TableColumn<MaintenanceRequest, String> resolutionDateColumn = new TableColumn<>("Resolution Date");
         resolutionDateColumn.setCellValueFactory(new PropertyValueFactory<>("resolutionDate"));
 
-
         // Add the columns to the TableView
         maintenanceRequestsTable.getColumns().addAll(idColumn, propertyIDColumn, tenantIDColumn, descriptionColumn, reportDateColumn, statusColumn, priorityColumn, resolutionDateColumn);
-
 
         // Retrieve maintenance requests from the database
         ObservableList<MaintenanceRequest> maintenanceRequests = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
              Statement stmt = con.createStatement()) {
+            // Execute a SQL query to retrieve the maintenance requests
             ResultSet rs = stmt.executeQuery("SELECT RequestID, PropertyID, TenantID, Description, ReportDate, Status, Priority, ResolutionDate FROM MaintenanceRequests");
             while (rs.next()) {
+                // Create a MaintenanceRequest object for each row in the result set
                 MaintenanceRequest maintenanceRequest = new MaintenanceRequest(rs.getInt("RequestID"), rs.getInt("PropertyID"), rs.getInt("TenantID"), rs.getString("Description"), rs.getDate("ReportDate"), rs.getString("Status"), rs.getString("Priority"), rs.getDate("ResolutionDate"));
+                // Add the MaintenanceRequest object to the ObservableList
                 maintenanceRequests.add(maintenanceRequest);
             }
         } catch (Exception e) {
@@ -69,7 +77,6 @@ public class MaintenanceRequestsDisplay {
 
         // Set the items for the TableView
         maintenanceRequestsTable.setItems(maintenanceRequests);
-
 
         // Create a back button to return to the previous screen
         Button backButton = new Button("Back");
@@ -84,7 +91,6 @@ public class MaintenanceRequestsDisplay {
         layout.setPadding(new Insets(10));
         layout.getChildren().addAll(maintenanceRequestsTable, backButton);
 
-
         // Create the scene and set it on the stage
         Scene scene = new Scene(layout, 800, 600);
         stage.setScene(scene);
@@ -93,6 +99,7 @@ public class MaintenanceRequestsDisplay {
 
     // MaintenanceRequest class to hold the data for each maintenance request
     public static class MaintenanceRequest {
+        // Fields for each column in the maintenance requests table
         private final int id;
         private final int propertyID;
         private final int tenantID;
@@ -102,7 +109,7 @@ public class MaintenanceRequestsDisplay {
         private final String priority;
         private final String resolutionDate;
 
-
+        // Constructor that initializes the fields
         public MaintenanceRequest(int id, int propertyID, int tenantID, String description, java.sql.Date reportDate, String status, String priority, java.sql.Date resolutionDate) {
             this.id = id;
             this.propertyID = propertyID;
@@ -114,6 +121,7 @@ public class MaintenanceRequestsDisplay {
             this.resolutionDate = resolutionDate != null ? resolutionDate.toString() : "";
         }
 
+        // Getter methods for each field
         public int getId() { return id; }
         public int getPropertyID() { return propertyID; }
         public int getTenantID() { return tenantID; }

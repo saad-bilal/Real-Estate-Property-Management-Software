@@ -1,3 +1,4 @@
+// Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -12,18 +13,22 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+// Class to display users in a table
 public class UsersDisplay {
+    // Stage on which the current scene will be shown
     private Stage stage;
 
+    // Constructor that initializes the stage
     public UsersDisplay(Stage stage) {
         this.stage = stage;
     }
 
+    // Method to show the users in a table
     public void showUsers() {
         // Create a TableView to display the users
         TableView<User> usersTable = new TableView<>();
 
-        // Define the columns
+        // Define the columns for the table
         TableColumn<User, Integer> idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -94,6 +99,7 @@ public class UsersDisplay {
         private final String phoneNumber;
         private final String role;
 
+        // Constructor for the User class
         public User(int id, String firstName, String lastName, String username, String email, String phoneNumber, String role) {
             this.id = id;
             this.firstName = firstName;
@@ -104,6 +110,7 @@ public class UsersDisplay {
             this.role = role;
         }
 
+        // Getters for the User class
         public int getId() { return id; }
         public String getFirstName() { return firstName; }
         public String getLastName() { return lastName; }

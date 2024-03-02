@@ -7,6 +7,16 @@ Welcome to the RealEstatePropertyManagementSoftware project. This project uses a
 1. Clone the repository.
 2. Create a `.env` file in the root directory of the project.
 3. Add your database connection details to the `.env` file.
+4. Download the `javafx-sdk-21.0.2` and add it to your project references.
+5. Download the `mysql-connector-j-8.3.0` and add it to the `lib` folder in your project.
+
+## JavaFX Configuration
+
+To run this project, you need to add the following configuration in Run > Add Configurations:
+
+`"vmArgs": "--module-path "/ADD/YOUR/PATH/TO/javafx-sdk-21.0.2/lib" --add-modules javafx.controls,javafx.fxml"`
+
+This configuration sets the module path to your local JavaFX SDK and adds the necessary JavaFX modules.
 
 ## Folder Structure
 
