@@ -1,0 +1,157 @@
+-- Users Table
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL, -- It's recommended to store hashed passwords
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    PhoneNumber VARCHAR(20),
+    Role ENUM('Employee', 'Admin') NOT NULL, -- Role can be either 'Employee' or 'Admin'
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO Users (Username, Password, FirstName, LastName, Email, PhoneNumber, Role)
+VALUES
+('alex.jordan', 'alexPass123', 'Alex', 'Jordan', 'alexjordan@example.com', '1122334455', 'Employee'),
+('lisa.ray', 'lisaPass123', 'Lisa', 'Ray', 'lisaray@example.com', '2233445566', 'Employee'),
+('omar.faruk', 'omarPass123', 'Omar', 'Faruk', 'omarfaruk@example.com', '3344556677', 'Employee'),
+('nina.petrova', 'ninaPass123', 'Nina', 'Petrova', 'ninapetrova@example.com', '4455667788', 'Admin'),
+('sam.kim', 'samPass123', 'Sam', 'Kim', 'samkim@example.com', '5566778899', 'Employee'),
+('eva.mendez', 'evaPass123', 'Eva', 'Mendez', 'evamendez@example.com', '6677889900', 'Admin');
+
+
+-- Property Table Creation and Sample Data Insertion
+CREATE TABLE Property (
+    PropertyID INT PRIMARY KEY,
+    Type VARCHAR(50),
+    Size VARCHAR(10), -- Stored as '3BHK', '2BHK', etc.
+    Location VARCHAR(100), -- Stored as 'City, Country'
+    Price VARCHAR(20), -- Stored as 'XXXX QR'
+    FurnishingStatus VARCHAR(20) CHECK (FurnishingStatus IN ('Furnished', 'Semi-Furnished', 'Unfurnished')),
+    MaintenanceHistory TEXT
+);
+
+INSERT INTO Property (PropertyID, Type, Size, Location, Price, FurnishingStatus, MaintenanceHistory)
+VALUES
+(1, 'Apartment', '3BHK', 'Doha, Qatar', '5000 QR', 'Furnished', NULL),
+(2, 'House', '4BHK', 'Doha, Qatar', '7000 QR', 'Semi-Furnished', NULL),
+(3, 'Commercial Space', '5BHK', 'Doha, Qatar', '10000 QR', 'Unfurnished', NULL),
+(4, 'Apartment', '2BHK', 'Doha, Qatar', '4000 QR', 'Furnished', NULL),
+(5, 'House', '3BHK', 'Doha, Qatar', '6000 QR', 'Semi-Furnished', NULL),
+(6, 'Apartment', '1BHK', 'Doha, Qatar', '3000 QR', 'Furnished', NULL),
+(7, 'Apartment', '2BHK', 'Doha, Qatar', '3500 QR', 'Unfurnished', 'Leak repairs, AC maintenance'),
+(8, 'House', '5BHK', 'Doha, Qatar', '9000 QR', 'Furnished', 'Window replacement, Plumbing checks'),
+(9, 'Commercial Space', '2BHK', 'Doha, Qatar', '12000 QR', 'Semi-Furnished', 'Painting, Electrical checks'),
+(10, 'Apartment', '3BHK', 'Doha, Qatar', '4500 QR', 'Furnished', 'Heating system repair'),
+(11, 'House', '4BHK', 'Doha, Qatar', '8000 QR', 'Semi-Furnished', 'Roof repairs, Garden maintenance');
+
+-- Tenant Table Creation and Sample Data Insertion
+CREATE TABLE Tenant (
+    TenantID INT PRIMARY KEY,
+    TenantName VARCHAR(100),
+    EmailAddress VARCHAR(100),
+    PhoneNumber VARCHAR(20),
+    MoveInDate DATE, -- Format 'YYYY-MM-DD'
+    MoveOutDate DATE, -- Format 'YYYY-MM-DD', can be NULL
+    PaymentHistory TEXT
+);
+
+INSERT INTO Tenant (TenantID, TenantName, EmailAddress, PhoneNumber, MoveInDate, MoveOutDate, PaymentHistory)
+VALUES
+(1, 'John Doe', 'johndoe@example.com', '12345678', '2021-01-19', NULL, NULL),
+(2, 'Jane Smith', 'janesmith@example.com', '87654321', '2021-02-20', NULL, NULL),
+(3, 'Ahmed Ali', 'ahmedali@example.com', '23456789', '2021-03-21', NULL, NULL),
+(4, 'Sara Khan', 'sarakhan@example.com', '98765432', '2021-04-22', NULL, NULL),
+(5, 'Mike Brown', 'mikebrown@example.com', '34567890', '2021-05-23', NULL, NULL),
+(6, 'Emily White', 'emilywhite@example.com', '09876543', '2021-06-24', NULL, NULL),
+(7, 'Liam Scott', 'liamscott@example.com', '56789012', '2021-07-15', '2022-07-14', 'July 2021 - June 2022 rent'),
+(8, 'Olivia Johnson', 'oliviajohnson@example.com', '67890123', '2021-08-10', '2022-08-09', 'August 2021 - July 2022 rent'),
+(9, 'Noah Miller', 'noahmiller@example.com', '78901234', '2021-09-20', '2022-09-19', 'September 2021 - August 2022 rent'),
+(10, 'Emma Davis', 'emmadavis@example.com', '89012345', '2021-10-25', '2022-10-24', 'October 2021 - September 2022 rent'),
+(11, 'Ava Wilson', 'avawilson@example.com', '90123456', '2021-11-30', '2022-11-29', 'November 2021 - October 2022 rent');
+
+-- Lease Agreements Table Creation and Sample Data Insertion
+CREATE TABLE LeaseAgreements (
+    LeaseID INT PRIMARY KEY,
+    PropertyID INT,
+    TenantID INT,
+    StartDate DATE, -- Format 'YYYY-MM-DD'
+    EndDate DATE, -- Format 'YYYY-MM-DD'
+    MonthlyRent VARCHAR(20), -- Stored as 'XXXX QR'
+    SecurityDeposit VARCHAR(20), -- Stored as 'XXXX QR'
+    SignatureDate DATE, -- Format 'YYYY-MM-DD'
+    Status VARCHAR(20), -- Such as 'active', 'terminated', 'expired'
+    FOREIGN KEY (PropertyID) REFERENCES Property(PropertyID),
+    FOREIGN KEY (TenantID) REFERENCES Tenant(TenantID)
+);
+
+INSERT INTO LeaseAgreements (LeaseID, PropertyID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit, SignatureDate, Status)
+VALUES
+(1, 1, 1, '2021-01-19', '2022-01-18', '5000 QR', '10000 QR', '2021-01-15', 'active'),
+(2, 2, 2, '2021-02-20', '2022-02-19', '7000 QR', '14000 QR', '2021-02-16', 'active'),
+(3, 3, 3, '2021-03-21', '2022-03-20', '10000 QR', '20000 QR', '2021-03-17', 'active'),
+(4, 4, 4, '2021-04-22', '2022-04-21', '4000 QR', '8000 QR', '2021-04-18', 'active'),
+(5, 5, 5, '2021-05-23', '2022-05-22', '6000 QR', '12000 QR', '2021-05-19', 'active'),
+(6, 6, 6, '2021-06-24', '2022-06-23', '3000 QR', '6000 QR', '2021-06-20', 'active'),
+(7, 7, 7, '2021-07-15', '2022-07-14', '3500 QR', '7000 QR', '2021-07-10', 'expired'),
+(8, 8, 8, '2021-08-10', '2022-08-09', '9000 QR', '18000 QR', '2021-08-05', 'expired'),
+(9, 9, 9, '2021-09-20', '2022-09-19', '12000 QR', '24000 QR', '2021-09-15', 'terminated'),
+(10, 10, 10, '2021-10-25', '2022-10-24', '4500 QR', '9000 QR', '2021-10-20', 'terminated'),
+(11, 11, 11, '2021-11-30', '2022-11-29', '8000 QR', '16000 QR', '2021-11-25', 'expired');
+
+-- Payments Table Creation and Sample Data Insertion
+CREATE TABLE Payments (
+    PaymentID INT PRIMARY KEY,
+    LeaseID INT,
+    TenantID INT,
+    PaymentDate DATE, -- Format 'YYYY-MM-DD'
+    Amount VARCHAR(20), -- Stored as 'XXXX QR'
+    PaymentType VARCHAR(50), -- Such as 'rent', 'deposit', 'maintenance fee'
+    Description TEXT,
+    ReceiptNumber VARCHAR(50),
+    FOREIGN KEY (LeaseID) REFERENCES LeaseAgreements(LeaseID),
+    FOREIGN KEY (TenantID) REFERENCES Tenant(TenantID)
+);
+
+INSERT INTO Payments (PaymentID, LeaseID, TenantID, PaymentDate, Amount, PaymentType, Description, ReceiptNumber)
+VALUES
+(1, 1, 1, '2021-02-19', '5000 QR', 'Rent', 'February Rent', 'R001'),
+(2, 2, 2, '2021-03-20', '7000 QR', 'Rent', 'March Rent', 'R002'),
+(3, 3, 3, '2021-04-21', '10000 QR', 'Rent', 'April Rent', 'R003'),
+(4, 4, 4, '2021-05-22', '4000 QR', 'Rent', 'May Rent', 'R004'),
+(5, 5, 5, '2021-06-23', '6000 QR', 'Rent', 'June Rent', 'R005'),
+(6, 6, 6, '2021-07-24', '3000 QR', 'Rent', 'July Rent', 'R006'),
+(7, 7, 7, '2021-08-15', '3500 QR', 'Rent', 'August Rent', 'R007'),
+(8, 8, 8, '2021-09-10', '9000 QR', 'Rent', 'September Rent', 'R008'),
+(9, 9, 9, '2021-10-20', '12000 QR', 'Rent', 'October Rent', 'R009'),
+(10, 10, 10, '2021-11-25', '4500 QR', 'Rent', 'November Rent', 'R010');
+
+-- Maintenance Requests Table Creation and Sample Data Insertion
+CREATE TABLE MaintenanceRequests (
+    RequestID INT PRIMARY KEY,
+    PropertyID INT,
+    TenantID INT,
+    Description TEXT,
+    ReportDate DATE, -- Format 'YYYY-MM-DD'
+    Status VARCHAR(50), -- Such as 'pending', 'in progress', 'completed'
+    Priority VARCHAR(20), -- Such as 'low', 'medium', 'high'
+    ResolutionDate DATE, -- Format 'YYYY-MM-DD', can be NULL
+    FOREIGN KEY (PropertyID) REFERENCES Property(PropertyID),
+    FOREIGN KEY (TenantID) REFERENCES Tenant(TenantID)
+);
+
+INSERT INTO MaintenanceRequests (RequestID, PropertyID, TenantID, Description, ReportDate, Status, Priority, ResolutionDate)
+VALUES
+(1, 1, 1, 'Leaky faucet in bathroom', '2021-01-25', 'completed', 'Medium', '2021-01-27'),
+(2, 2, 2, 'Air conditioning not working', '2021-02-26', 'in progress', 'High', NULL),
+(3, 3, 3, 'Broken window lock', '2021-03-27', 'pending', 'Low', NULL),
+(4, 4, 4, 'Malfunctioning smoke detector', '2021-04-28', 'completed', 'Medium', '2021-04-30'),
+(5, 5, 5, 'Clogged kitchen sink', '2021-05-29', 'in progress', 'High', NULL),
+(6, 6, 6, 'Electrical short circuit in living room', '2021-06-30', 'pending', 'High', NULL),
+(7, 7, 7, 'Broken door handle', '2021-07-15', 'completed', 'Low', '2021-07-17'),
+(8, 8, 8, 'Heating not working', '2021-08-10', 'in progress', 'Medium', NULL),
+(9, 9, 9, 'Water leakage from ceiling', '2021-09-20', 'pending', 'High', NULL),
+(10, 10, 10, 'Cracked window glass', '2021-10-25', 'completed', 'Medium', '2021-10-27');
+
