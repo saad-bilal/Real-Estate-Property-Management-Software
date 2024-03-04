@@ -80,8 +80,8 @@ public class UserLogin {
 
             // If a row is returned, the username and password are correct
             if (rs.next()) {
-                // User is authenticated, proceed to the next screen
-                DisplayOptions displayOptions = new DisplayOptions(stage);
+                String userRole = rs.getString("Role"); // Assuming the role column is named 'Role'
+                DisplayOptions displayOptions = new DisplayOptions(stage, userRole);
                 displayOptions.showOptions();
             } else {
                 // Authentication failed, show an alert
