@@ -1,9 +1,9 @@
 
 // Import necessary JavaFX classes
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+// import java.sql.Connection;
+// import java.sql.PreparedStatement;
+// import java.sql.ResultSet;
+// import java.sql.SQLException;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -22,26 +22,26 @@ public class DisplayOptions {
         this.stage = stage;
     }
 
-    private String currentUsername;
+    // private String currentUsername;
 
-    public void setCurrentUsername(String username) {
-        this.currentUsername = username;
-    }
+    // public void setCurrentUsername(String username) {
+    //     this.currentUsername = username;
+    // }
 
-    private String getUserRole() {
-        String role = "Employee"; // Default role if not found
-        try (Connection con = DBUtils.establishConnection();
-                PreparedStatement pstmt = con.prepareStatement("SELECT Role FROM Users WHERE Username = ?")) {
-            pstmt.setString(1, currentUsername);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                role = rs.getString("Role");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return role;
-    }
+    // private String getUserRole() {
+    //     String role = "Employee"; // Default role if not found
+    //     try (Connection con = DBUtils.establishConnection();
+    //             PreparedStatement pstmt = con.prepareStatement("SELECT Role FROM Users WHERE Username = ?")) {
+    //         pstmt.setString(1, currentUsername);
+    //         ResultSet rs = pstmt.executeQuery();
+    //         if (rs.next()) {
+    //             role = rs.getString("Role");
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return role;
+    // }
 
     private String userRole; // Add this line to store user role
 

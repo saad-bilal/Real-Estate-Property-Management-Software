@@ -1,3 +1,4 @@
+
 // Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +31,8 @@ public class MaintenanceRequestsDisplay {
 
         // Define the columns for the table
         // Each column represents a field in the MaintenanceRequest class
-        // The PropertyValueFactory uses the getter methods in the MaintenanceRequest class to populate the columns
+        // The PropertyValueFactory uses the getter methods in the MaintenanceRequest
+        // class to populate the columns
         TableColumn<MaintenanceRequest, Integer> idColumn = new TableColumn<>("Request ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -55,18 +57,29 @@ public class MaintenanceRequestsDisplay {
         TableColumn<MaintenanceRequest, String> resolutionDateColumn = new TableColumn<>("Resolution Date");
         resolutionDateColumn.setCellValueFactory(new PropertyValueFactory<>("resolutionDate"));
 
-        // Add the columns to the TableView
-        maintenanceRequestsTable.getColumns().addAll(idColumn, propertyIDColumn, tenantIDColumn, descriptionColumn, reportDateColumn, statusColumn, priorityColumn, resolutionDateColumn);
+        // Add the columns to the MaintenanceRequestsTable one by one
+        maintenanceRequestsTable.getColumns().add(idColumn);
+        maintenanceRequestsTable.getColumns().add(propertyIDColumn);
+        maintenanceRequestsTable.getColumns().add(tenantIDColumn);
+        maintenanceRequestsTable.getColumns().add(descriptionColumn);
+        maintenanceRequestsTable.getColumns().add(reportDateColumn);
+        maintenanceRequestsTable.getColumns().add(statusColumn);
+        maintenanceRequestsTable.getColumns().add(priorityColumn);
+        maintenanceRequestsTable.getColumns().add(resolutionDateColumn);
 
         // Retrieve maintenance requests from the database
         ObservableList<MaintenanceRequest> maintenanceRequests = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
+                Statement stmt = con.createStatement()) {
             // Execute a SQL query to retrieve the maintenance requests
-            ResultSet rs = stmt.executeQuery("SELECT RequestID, PropertyID, TenantID, Description, ReportDate, Status, Priority, ResolutionDate FROM MaintenanceRequests");
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT RequestID, PropertyID, TenantID, Description, ReportDate, Status, Priority, ResolutionDate FROM MaintenanceRequests");
             while (rs.next()) {
                 // Create a MaintenanceRequest object for each row in the result set
-                MaintenanceRequest maintenanceRequest = new MaintenanceRequest(rs.getInt("RequestID"), rs.getInt("PropertyID"), rs.getInt("TenantID"), rs.getString("Description"), rs.getDate("ReportDate"), rs.getString("Status"), rs.getString("Priority"), rs.getDate("ResolutionDate"));
+                MaintenanceRequest maintenanceRequest = new MaintenanceRequest(rs.getInt("RequestID"),
+                        rs.getInt("PropertyID"), rs.getInt("TenantID"), rs.getString("Description"),
+                        rs.getDate("ReportDate"), rs.getString("Status"), rs.getString("Priority"),
+                        rs.getDate("ResolutionDate"));
                 // Add the MaintenanceRequest object to the ObservableList
                 maintenanceRequests.add(maintenanceRequest);
             }
@@ -110,7 +123,8 @@ public class MaintenanceRequestsDisplay {
         private final String resolutionDate;
 
         // Constructor that initializes the fields
-        public MaintenanceRequest(int id, int propertyID, int tenantID, String description, java.sql.Date reportDate, String status, String priority, java.sql.Date resolutionDate) {
+        public MaintenanceRequest(int id, int propertyID, int tenantID, String description, java.sql.Date reportDate,
+                String status, String priority, java.sql.Date resolutionDate) {
             this.id = id;
             this.propertyID = propertyID;
             this.tenantID = tenantID;
@@ -122,13 +136,36 @@ public class MaintenanceRequestsDisplay {
         }
 
         // Getter methods for each field
-        public int getId() { return id; }
-        public int getPropertyID() { return propertyID; }
-        public int getTenantID() { return tenantID; }
-        public String getDescription() { return description; }
-        public String getReportDate() { return reportDate; }
-        public String getStatus() { return status; }
-        public String getPriority() { return priority; }
-        public String getResolutionDate() { return resolutionDate; }
+        public int getId() {
+            return id;
+        }
+
+        public int getPropertyID() {
+            return propertyID;
+        }
+
+        public int getTenantID() {
+            return tenantID;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getReportDate() {
+            return reportDate;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getPriority() {
+            return priority;
+        }
+
+        public String getResolutionDate() {
+            return resolutionDate;
+        }
     }
 }

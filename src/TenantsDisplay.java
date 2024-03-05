@@ -30,7 +30,8 @@ public class TenantsDisplay {
 
         // Define the columns for the table
         // Each column represents a field in the Tenant class
-        // The PropertyValueFactory uses the getter methods in the Tenant class to populate the columns
+        // The PropertyValueFactory uses the getter methods in the Tenant class to
+        // populate the columns
         TableColumn<Tenant, Integer> idColumn = new TableColumn<>("Tenant ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -49,18 +50,26 @@ public class TenantsDisplay {
         TableColumn<Tenant, String> moveOutDateColumn = new TableColumn<>("Move-out Date");
         moveOutDateColumn.setCellValueFactory(new PropertyValueFactory<>("moveOutDate"));
 
-        // Add the columns to the TableView
-        tenantsTable.getColumns().addAll(idColumn, nameColumn, emailColumn, phoneNumberColumn, moveInDateColumn, moveOutDateColumn);
+        // Add the columns to the TenantsTable one by one
+        tenantsTable.getColumns().add(idColumn);
+        tenantsTable.getColumns().add(nameColumn);
+        tenantsTable.getColumns().add(emailColumn);
+        tenantsTable.getColumns().add(phoneNumberColumn);
+        tenantsTable.getColumns().add(moveInDateColumn);
+        tenantsTable.getColumns().add(moveOutDateColumn);
 
         // Retrieve tenants from the database
         ObservableList<Tenant> tenants = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
+                Statement stmt = con.createStatement()) {
             // Execute a SQL query to retrieve the tenants
-            ResultSet rs = stmt.executeQuery("SELECT TenantID, TenantName, EmailAddress, PhoneNumber, MoveInDate, MoveOutDate FROM Tenant");
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT TenantID, TenantName, EmailAddress, PhoneNumber, MoveInDate, MoveOutDate FROM Tenant");
             while (rs.next()) {
                 // Create a Tenant object for each row in the result set
-                Tenant tenant = new Tenant(rs.getInt("TenantID"), rs.getString("TenantName"), rs.getString("EmailAddress"), rs.getString("PhoneNumber"), rs.getDate("MoveInDate"), rs.getDate("MoveOutDate"));
+                Tenant tenant = new Tenant(rs.getInt("TenantID"), rs.getString("TenantName"),
+                        rs.getString("EmailAddress"), rs.getString("PhoneNumber"), rs.getDate("MoveInDate"),
+                        rs.getDate("MoveOutDate"));
                 // Add the Tenant object to the ObservableList
                 tenants.add(tenant);
             }
@@ -102,7 +111,8 @@ public class TenantsDisplay {
         private final String moveOutDate;
 
         // Constructor that initializes the fields
-        public Tenant(int id, String name, String email, String phoneNumber, java.sql.Date moveInDate, java.sql.Date moveOutDate) {
+        public Tenant(int id, String name, String email, String phoneNumber, java.sql.Date moveInDate,
+                java.sql.Date moveOutDate) {
             this.id = id;
             this.name = name;
             this.email = email;
@@ -112,11 +122,28 @@ public class TenantsDisplay {
         }
 
         // Getter methods for each field
-        public int getId() { return id; }
-        public String getName() { return name; }
-        public String getEmail() { return email; }
-        public String getPhoneNumber() { return phoneNumber; }
-        public String getMoveInDate() { return moveInDate; }
-        public String getMoveOutDate() { return moveOutDate; }
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public String getMoveInDate() {
+            return moveInDate;
+        }
+
+        public String getMoveOutDate() {
+            return moveOutDate;
+        }
     }
 }

@@ -1,3 +1,4 @@
+
 // Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +31,8 @@ public class LeasesDisplay {
 
         // Define the columns for the table
         // Each column represents a field in the Lease class
-        // The PropertyValueFactory uses the getter methods in the Lease class to populate the columns
+        // The PropertyValueFactory uses the getter methods in the Lease class to
+        // populate the columns
         TableColumn<Lease, Integer> idColumn = new TableColumn<>("Lease ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -58,18 +60,29 @@ public class LeasesDisplay {
         TableColumn<Lease, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        // Add the columns to the TableView
-        leasesTable.getColumns().addAll(idColumn, propertyIDColumn, tenantIDColumn, startDateColumn, endDateColumn, monthlyRentColumn, securityDepositColumn, signatureDateColumn, statusColumn);
+        // Add the columns to the TableView one by one
+        leasesTable.getColumns().add(idColumn);
+        leasesTable.getColumns().add(propertyIDColumn);
+        leasesTable.getColumns().add(tenantIDColumn);
+        leasesTable.getColumns().add(startDateColumn);
+        leasesTable.getColumns().add(endDateColumn);
+        leasesTable.getColumns().add(monthlyRentColumn);
+        leasesTable.getColumns().add(securityDepositColumn);
+        leasesTable.getColumns().add(signatureDateColumn);
+        leasesTable.getColumns().add(statusColumn);
 
         // Retrieve leases from the database
         ObservableList<Lease> leases = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
+                Statement stmt = con.createStatement()) {
             // Execute a SQL query to retrieve the leases
-            ResultSet rs = stmt.executeQuery("SELECT LeaseID, PropertyID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit, SignatureDate, Status FROM LeaseAgreements");
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT LeaseID, PropertyID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit, SignatureDate, Status FROM LeaseAgreements");
             while (rs.next()) {
                 // Create a Lease object for each row in the result set
-                Lease lease = new Lease(rs.getInt("LeaseID"), rs.getInt("PropertyID"), rs.getInt("TenantID"), rs.getDate("StartDate"), rs.getDate("EndDate"), rs.getString("MonthlyRent"), rs.getString("SecurityDeposit"), rs.getDate("SignatureDate"), rs.getString("Status"));
+                Lease lease = new Lease(rs.getInt("LeaseID"), rs.getInt("PropertyID"), rs.getInt("TenantID"),
+                        rs.getDate("StartDate"), rs.getDate("EndDate"), rs.getString("MonthlyRent"),
+                        rs.getString("SecurityDeposit"), rs.getDate("SignatureDate"), rs.getString("Status"));
                 // Add the Lease object to the ObservableList
                 leases.add(lease);
             }
@@ -114,7 +127,8 @@ public class LeasesDisplay {
         private final String status;
 
         // Constructor that initializes the fields
-        public Lease(int id, int propertyID, int tenantID, java.sql.Date startDate, java.sql.Date endDate, String monthlyRent, String securityDeposit, java.sql.Date signatureDate, String status) {
+        public Lease(int id, int propertyID, int tenantID, java.sql.Date startDate, java.sql.Date endDate,
+                String monthlyRent, String securityDeposit, java.sql.Date signatureDate, String status) {
             this.id = id;
             this.propertyID = propertyID;
             this.tenantID = tenantID;
@@ -127,14 +141,40 @@ public class LeasesDisplay {
         }
 
         // Getter methods for each field
-        public int getId() { return id; }
-        public int getPropertyID() { return propertyID; }
-        public int getTenantID() { return tenantID; }
-        public String getStartDate() { return startDate; }
-        public String getEndDate() { return endDate; }
-        public String getMonthlyRent() { return monthlyRent; }
-        public String getSecurityDeposit() { return securityDeposit; }
-        public String getSignatureDate() { return signatureDate; }
-        public String getStatus() { return status; }
+        public int getId() {
+            return id;
+        }
+
+        public int getPropertyID() {
+            return propertyID;
+        }
+
+        public int getTenantID() {
+            return tenantID;
+        }
+
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public String getEndDate() {
+            return endDate;
+        }
+
+        public String getMonthlyRent() {
+            return monthlyRent;
+        }
+
+        public String getSecurityDeposit() {
+            return securityDeposit;
+        }
+
+        public String getSignatureDate() {
+            return signatureDate;
+        }
+
+        public String getStatus() {
+            return status;
+        }
     }
 }

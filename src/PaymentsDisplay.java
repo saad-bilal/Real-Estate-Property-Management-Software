@@ -1,3 +1,4 @@
+
 // Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +31,8 @@ public class PaymentsDisplay {
 
         // Define the columns for the table
         // Each column represents a field in the Payment class
-        // The PropertyValueFactory uses the getter methods in the Payment class to populate the columns
+        // The PropertyValueFactory uses the getter methods in the Payment class to
+        // populate the columns
         TableColumn<Payment, Integer> idColumn = new TableColumn<>("Payment ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -55,18 +57,28 @@ public class PaymentsDisplay {
         TableColumn<Payment, String> receiptNumberColumn = new TableColumn<>("Receipt Number");
         receiptNumberColumn.setCellValueFactory(new PropertyValueFactory<>("receiptNumber"));
 
-        // Add the columns to the TableView
-        paymentsTable.getColumns().addAll(idColumn, leaseIDColumn, tenantIDColumn, paymentDateColumn, amountColumn, paymentTypeColumn, descriptionColumn, receiptNumberColumn);
+        // Add the columns to the PaymentsTable one by one
+        paymentsTable.getColumns().add(idColumn);
+        paymentsTable.getColumns().add(leaseIDColumn);
+        paymentsTable.getColumns().add(tenantIDColumn);
+        paymentsTable.getColumns().add(paymentDateColumn);
+        paymentsTable.getColumns().add(amountColumn);
+        paymentsTable.getColumns().add(paymentTypeColumn);
+        paymentsTable.getColumns().add(descriptionColumn);
+        paymentsTable.getColumns().add(receiptNumberColumn);
 
         // Retrieve payments from the database
         ObservableList<Payment> payments = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
+                Statement stmt = con.createStatement()) {
             // Execute a SQL query to retrieve the payments
-            ResultSet rs = stmt.executeQuery("SELECT PaymentID, LeaseID, TenantID, PaymentDate, Amount, PaymentType, Description, ReceiptNumber FROM Payments");
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT PaymentID, LeaseID, TenantID, PaymentDate, Amount, PaymentType, Description, ReceiptNumber FROM Payments");
             while (rs.next()) {
                 // Create a Payment object for each row in the result set
-                Payment payment = new Payment(rs.getInt("PaymentID"), rs.getInt("LeaseID"), rs.getInt("TenantID"), rs.getDate("PaymentDate"), rs.getString("Amount"), rs.getString("PaymentType"), rs.getString("Description"), rs.getString("ReceiptNumber"));
+                Payment payment = new Payment(rs.getInt("PaymentID"), rs.getInt("LeaseID"), rs.getInt("TenantID"),
+                        rs.getDate("PaymentDate"), rs.getString("Amount"), rs.getString("PaymentType"),
+                        rs.getString("Description"), rs.getString("ReceiptNumber"));
                 // Add the Payment object to the ObservableList
                 payments.add(payment);
             }
@@ -110,7 +122,8 @@ public class PaymentsDisplay {
         private final String receiptNumber;
 
         // Constructor that initializes the fields
-        public Payment(int id, int leaseID, int tenantID, java.sql.Date paymentDate, String amount, String paymentType, String description, String receiptNumber) {
+        public Payment(int id, int leaseID, int tenantID, java.sql.Date paymentDate, String amount, String paymentType,
+                String description, String receiptNumber) {
             this.id = id;
             this.leaseID = leaseID;
             this.tenantID = tenantID;
@@ -122,13 +135,36 @@ public class PaymentsDisplay {
         }
 
         // Getter methods for each field
-        public int getId() { return id; }
-        public int getLeaseID() { return leaseID; }
-        public int getTenantID() { return tenantID; }
-        public String getPaymentDate() { return paymentDate; }
-        public String getAmount() { return amount; }
-        public String getPaymentType() { return paymentType; }
-        public String getDescription() { return description; }
-        public String getReceiptNumber() { return receiptNumber; }
+        public int getId() {
+            return id;
+        }
+
+        public int getLeaseID() {
+            return leaseID;
+        }
+
+        public int getTenantID() {
+            return tenantID;
+        }
+
+        public String getPaymentDate() {
+            return paymentDate;
+        }
+
+        public String getAmount() {
+            return amount;
+        }
+
+        public String getPaymentType() {
+            return paymentType;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getReceiptNumber() {
+            return receiptNumber;
+        }
     }
 }

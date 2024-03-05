@@ -1,3 +1,4 @@
+
 // Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,16 +51,25 @@ public class UsersDisplay {
         TableColumn<User, String> roleColumn = new TableColumn<>("Role");
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-        // Add the columns to the TableView
-        usersTable.getColumns().addAll(idColumn, firstNameColumn, lastNameColumn, usernameColumn, emailColumn, phoneNumberColumn, roleColumn);
+        // Add the columns to the TableView one by one
+        usersTable.getColumns().add(idColumn);
+        usersTable.getColumns().add(firstNameColumn);
+        usersTable.getColumns().add(lastNameColumn);
+        usersTable.getColumns().add(usernameColumn);
+        usersTable.getColumns().add(emailColumn);
+        usersTable.getColumns().add(phoneNumberColumn);
+        usersTable.getColumns().add(roleColumn);
 
         // Retrieve users from the database
         ObservableList<User> users = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT UserID, FirstName, LastName, Username, Email, PhoneNumber, Role FROM Users");
+                Statement stmt = con.createStatement()) {
+            ResultSet rs = stmt
+                    .executeQuery("SELECT UserID, FirstName, LastName, Username, Email, PhoneNumber, Role FROM Users");
             while (rs.next()) {
-                User user = new User(rs.getInt("UserID"), rs.getString("FirstName"), rs.getString("LastName"), rs.getString("Username"), rs.getString("Email"), rs.getString("PhoneNumber"), rs.getString("Role"));
+                User user = new User(rs.getInt("UserID"), rs.getString("FirstName"), rs.getString("LastName"),
+                        rs.getString("Username"), rs.getString("Email"), rs.getString("PhoneNumber"),
+                        rs.getString("Role"));
                 users.add(user);
             }
         } catch (Exception e) {
@@ -100,7 +110,8 @@ public class UsersDisplay {
         private final String role;
 
         // Constructor for the User class
-        public User(int id, String firstName, String lastName, String username, String email, String phoneNumber, String role) {
+        public User(int id, String firstName, String lastName, String username, String email, String phoneNumber,
+                String role) {
             this.id = id;
             this.firstName = firstName;
             this.lastName = lastName;
@@ -111,12 +122,32 @@ public class UsersDisplay {
         }
 
         // Getters for the User class
-        public int getId() { return id; }
-        public String getFirstName() { return firstName; }
-        public String getLastName() { return lastName; }
-        public String getUsername() { return username; }
-        public String getEmail() { return email; }
-        public String getPhoneNumber() { return phoneNumber; }
-        public String getRole() { return role; }
+        public int getId() {
+            return id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public String getRole() {
+            return role;
+        }
     }
 }

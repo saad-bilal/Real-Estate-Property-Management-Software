@@ -1,3 +1,4 @@
+
 // Import necessary JavaFX and SQL classes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +31,8 @@ public class PropertiesDisplay {
 
         // Define the columns for the table
         // Each column represents a field in the Property class
-        // The PropertyValueFactory uses the getter methods in the Property class to populate the columns
+        // The PropertyValueFactory uses the getter methods in the Property class to
+        // populate the columns
         TableColumn<Property, Integer> idColumn = new TableColumn<>("Property ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -49,18 +51,25 @@ public class PropertiesDisplay {
         TableColumn<Property, String> furnishingStatusColumn = new TableColumn<>("Furnishing Status");
         furnishingStatusColumn.setCellValueFactory(new PropertyValueFactory<>("furnishingStatus"));
 
-        // Add the columns to the TableView
-        propertiesTable.getColumns().addAll(idColumn, typeColumn, sizeColumn, locationColumn, priceColumn, furnishingStatusColumn);
+        // Add the columns to the PropertiesTable one by one
+        propertiesTable.getColumns().add(idColumn);
+        propertiesTable.getColumns().add(typeColumn);
+        propertiesTable.getColumns().add(sizeColumn);
+        propertiesTable.getColumns().add(locationColumn);
+        propertiesTable.getColumns().add(priceColumn);
+        propertiesTable.getColumns().add(furnishingStatusColumn);
 
         // Retrieve properties from the database
         ObservableList<Property> properties = FXCollections.observableArrayList();
         try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
+                Statement stmt = con.createStatement()) {
             // Execute a SQL query to retrieve the properties
-            ResultSet rs = stmt.executeQuery("SELECT PropertyID, Type, Size, Location, Price, FurnishingStatus FROM Property");
+            ResultSet rs = stmt
+                    .executeQuery("SELECT PropertyID, Type, Size, Location, Price, FurnishingStatus FROM Property");
             while (rs.next()) {
                 // Create a Property object for each row in the result set
-                Property property = new Property(rs.getInt("PropertyID"), rs.getString("Type"), rs.getString("Size"), rs.getString("Location"), rs.getString("Price"), rs.getString("FurnishingStatus"));
+                Property property = new Property(rs.getInt("PropertyID"), rs.getString("Type"), rs.getString("Size"),
+                        rs.getString("Location"), rs.getString("Price"), rs.getString("FurnishingStatus"));
                 // Add the Property object to the ObservableList
                 properties.add(property);
             }
@@ -112,11 +121,28 @@ public class PropertiesDisplay {
         }
 
         // Getter methods for each field
-        public int getId() { return id; }
-        public String getType() { return type; }
-        public String getSize() { return size; }
-        public String getLocation() { return location; }
-        public String getPrice() { return price; }
-        public String getFurnishingStatus() { return furnishingStatus; }
+        public int getId() {
+            return id;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getSize() {
+            return size;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public String getPrice() {
+            return price;
+        }
+
+        public String getFurnishingStatus() {
+            return furnishingStatus;
+        }
     }
 }
