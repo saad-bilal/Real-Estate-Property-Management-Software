@@ -1,4 +1,5 @@
-// Import necessary JavaFX and SQL classes
+// UserLogin.java
+
 import java.sql.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

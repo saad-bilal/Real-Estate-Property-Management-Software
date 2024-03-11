@@ -1,3 +1,4 @@
+// DisplayOptions.java
 
 // Import necessary JavaFX classes
 // import java.sql.Connection;
@@ -108,7 +109,9 @@ public class DisplayOptions {
         if ("Admin".equals(this.userRole)) {
             Button usersButton = new Button("Users");
             usersButton.setOnAction(e -> {
-                UsersDisplay usersDisplay = new UsersDisplay(stage);
+                UsersDisplay usersDisplay = new UsersDisplay(stage, "Admin"); // Assuming 'Admin' is the user role, replace "Admin" with the actual variable or method that holds the current user's role
+
+
                 usersDisplay.showUsers();
             });
             layout.getChildren().add(usersButton);

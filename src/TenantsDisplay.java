@@ -1,4 +1,5 @@
-// Import necessary JavaFX and SQL classes
+// TenansDisplay.java
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;

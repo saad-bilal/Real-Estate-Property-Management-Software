@@ -1,3 +1,5 @@
+Database Schema for Real Estate Management System
+
 -- Users Table
 CREATE TABLE Users (
     UserID INT PRIMARY KEY AUTO_INCREMENT,
@@ -154,4 +156,3 @@ VALUES
 (8, 8, 8, 'Heating not working', '2021-08-10', 'in progress', 'Medium', NULL),
 (9, 9, 9, 'Water leakage from ceiling', '2021-09-20', 'pending', 'High', NULL),
 (10, 10, 10, 'Cracked window glass', '2021-10-25', 'completed', 'Medium', '2021-10-27');
-

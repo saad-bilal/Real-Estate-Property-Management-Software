@@ -12,5 +12,8 @@
         "/Users/saad/Developer/javafx-sdk-21.0.2/lib/javafx.media.jar",
         "/Users/saad/Developer/javafx-sdk-21.0.2/lib/javafx-swt.jar",
         "/Users/saad/Developer/javafx-sdk-21.0.2/lib/javafx.fxml.jar"
+    ],
+    "cSpell.words": [
+        "pstmt"
     ]
 }
