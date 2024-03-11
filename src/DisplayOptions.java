@@ -23,27 +23,6 @@ public class DisplayOptions {
         this.stage = stage;
     }
 
-    // private String currentUsername;
-
-    // public void setCurrentUsername(String username) {
-    //     this.currentUsername = username;
-    // }
-
-    // private String getUserRole() {
-    //     String role = "Employee"; // Default role if not found
-    //     try (Connection con = DBUtils.establishConnection();
-    //             PreparedStatement pstmt = con.prepareStatement("SELECT Role FROM Users WHERE Username = ?")) {
-    //         pstmt.setString(1, currentUsername);
-    //         ResultSet rs = pstmt.executeQuery();
-    //         if (rs.next()) {
-    //             role = rs.getString("Role");
-    //         }
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return role;
-    // }
-
     private String userRole; // Add this line to store user role
 
     // Modify the constructor to accept user role
@@ -67,31 +46,31 @@ public class DisplayOptions {
         // Create buttons for each option
         Button leasesButton = new Button("Leases");
         leasesButton.setOnAction(e -> {
-            LeasesDisplay leasesDisplay = new LeasesDisplay(stage);
+            LeasesDisplay leasesDisplay = new LeasesDisplay(stage, this.userRole);
             leasesDisplay.showLeases();
         });
 
         Button propertiesButton = new Button("Properties");
         propertiesButton.setOnAction(e -> {
-            PropertiesDisplay propertiesDisplay = new PropertiesDisplay(stage);
+            PropertiesDisplay propertiesDisplay = new PropertiesDisplay(stage, this.userRole);
             propertiesDisplay.showProperties();
         });
 
         Button maintenanceRequestsButton = new Button("Maintenance Requests");
         maintenanceRequestsButton.setOnAction(e -> {
-            MaintenanceRequestsDisplay maintenanceRequestsDisplay = new MaintenanceRequestsDisplay(stage);
+            MaintenanceRequestsDisplay maintenanceRequestsDisplay = new MaintenanceRequestsDisplay(stage, this.userRole);
             maintenanceRequestsDisplay.showMaintenanceRequests();
         });
 
         Button paymentsButton = new Button("Payments");
         paymentsButton.setOnAction(e -> {
-            PaymentsDisplay paymentsDisplay = new PaymentsDisplay(stage);
+            PaymentsDisplay paymentsDisplay = new PaymentsDisplay(stage, this.userRole);
             paymentsDisplay.showPayments();
         });
 
         Button tenantsButton = new Button("Tenants");
         tenantsButton.setOnAction(e -> {
-            TenantsDisplay tenantsDisplay = new TenantsDisplay(stage);
+            TenantsDisplay tenantsDisplay = new TenantsDisplay(stage, this.userRole);
             tenantsDisplay.showTenants();
         });
 
@@ -105,13 +84,14 @@ public class DisplayOptions {
         layout.getChildren().addAll(title, leasesButton, propertiesButton, maintenanceRequestsButton, paymentsButton,
                 tenantsButton);
 
+        System.out.println("Current user role: " + this.userRole);
+
         // Only add the Users button if the user is an admin
         if ("Admin".equals(this.userRole)) {
             Button usersButton = new Button("Users");
             usersButton.setOnAction(e -> {
-                UsersDisplay usersDisplay = new UsersDisplay(stage, "Admin"); // Assuming 'Admin' is the user role, replace "Admin" with the actual variable or method that holds the current user's role
-
-
+                // UsersDisplay usersDisplay = new UsersDisplay(stage, "Admin");
+                UsersDisplay usersDisplay = new UsersDisplay(stage, this.userRole);
                 usersDisplay.showUsers();
             });
             layout.getChildren().add(usersButton);

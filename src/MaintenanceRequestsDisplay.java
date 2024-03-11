@@ -18,10 +18,12 @@ import java.sql.Statement;
 public class MaintenanceRequestsDisplay {
     // Stage on which the current scene will be shown
     private Stage stage;
+    private String userRole;
 
     // Constructor that initializes the stage
-    public MaintenanceRequestsDisplay(Stage stage) {
+    public MaintenanceRequestsDisplay(Stage stage, String userRole) {
         this.stage = stage;
+        this.userRole = userRole;
     }
 
     // Method to show the maintenance requests in a table
@@ -95,7 +97,7 @@ public class MaintenanceRequestsDisplay {
         Button backButton = new Button("Back");
         backButton.setOnAction(e -> {
             // Go back to the DisplayOptions screen
-            DisplayOptions displayOptions = new DisplayOptions(stage);
+            DisplayOptions displayOptions = new DisplayOptions(stage, this.userRole);
             displayOptions.showOptions();
         });
 
