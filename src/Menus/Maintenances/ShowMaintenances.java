@@ -11,9 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ShowMaintenances {
     private final Stage stage;
@@ -56,16 +55,10 @@ public class ShowMaintenances {
         maintenanceTable.getColumns().add(resolutionDateColumn);
 
         ObservableList<Maintenance> maintenances = FXCollections.observableArrayList();
-        try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt
-                    .executeQuery("SELECT RequestID, PropertyID, TenantID, Description, ReportDate, Status, Priority, ResolutionDate FROM MaintenanceRequests");
-            while (rs.next()) {
-                maintenances.add(new Maintenance(rs.getInt("RequestID"), rs.getInt("PropertyID"), rs.getInt("TenantID"),
-                        rs.getString("Description"), rs.getDate("ReportDate").toString(),
-                        rs.getString("Status"), rs.getString("Priority"), rs.getDate("ResolutionDate") != null ? rs.getDate("ResolutionDate").toString() : null));
-            }
-        } catch (Exception e) {
+        try {
+            List<Maintenance> allMaintenanceRequests = MaintenanceDAO.getAllMaintenanceRequests();
+            maintenances.addAll(allMaintenanceRequests);
+        } catch (SQLException e) {
             ShowAlert.display("Database Error", "Failed to load maintenance requests: " + e.getMessage(),
                     Alert.AlertType.WARNING);
         }
@@ -115,8 +108,17 @@ public class ShowMaintenances {
                     });
 
                     removeButton.setOnAction(event -> {
-                        RemoveMaintenance.removeMaintenance(maintenance.getId());
-                        RefreshTable.refreshMaintenanceTable(maintenanceTable);
+                        try {
+                            MaintenanceDAO.removeMaintenanceRequest(maintenance.getId());
+                            maintenances.remove(maintenance);
+                            ShowAlert.display("Maintenance Request Removed",
+                                    "The maintenance request has been successfully removed.",
+                                    Alert.AlertType.INFORMATION);
+                        } catch (SQLException ex) {
+                            ShowAlert.display("Database Error",
+                                    "Failed to remove maintenance request: " + ex.getMessage(),
+                                    Alert.AlertType.WARNING);
+                        }
                     });
                 }
             }

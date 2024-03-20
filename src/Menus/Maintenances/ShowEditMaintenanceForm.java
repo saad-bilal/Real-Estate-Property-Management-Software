@@ -6,8 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShowEditMaintenanceForm {
@@ -37,19 +35,16 @@ public class ShowEditMaintenanceForm {
 
         Button submitButton = new Button("Update");
         submitButton.setOnAction(e -> {
-            try (Connection con = DBUtils.establishConnection();
-                 PreparedStatement pstmt = con.prepareStatement(
-                         "UPDATE MaintenanceRequests SET PropertyID = ?, TenantID = ?, Description = ?, ReportDate = ?, Status = ?, Priority = ?, ResolutionDate = ? WHERE RequestID = ?")) {
-
-                pstmt.setInt(1, Integer.parseInt(propertyIdField.getText()));
-                pstmt.setInt(2, Integer.parseInt(tenantIdField.getText()));
-                pstmt.setString(3, descriptionField.getText());
-                pstmt.setDate(4, java.sql.Date.valueOf(reportDatePicker.getValue()));
-                pstmt.setString(5, statusField.getText());
-                pstmt.setString(6, priorityField.getText());
-                pstmt.setDate(7, resolutionDatePicker.getValue() != null ? java.sql.Date.valueOf(resolutionDatePicker.getValue()) : null);
-                pstmt.setInt(8, maintenance.getId());
-                pstmt.executeUpdate();
+            try {
+                MaintenanceDAO.updateMaintenanceRequest(
+                        maintenance.getId(),
+                        Integer.parseInt(propertyIdField.getText()),
+                        Integer.parseInt(tenantIdField.getText()),
+                        descriptionField.getText(),
+                        reportDatePicker.getValue().toString(),
+                        statusField.getText(),
+                        priorityField.getText(),
+                        resolutionDatePicker.getValue() != null ? resolutionDatePicker.getValue().toString() : null);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Maintenance Request Updated");

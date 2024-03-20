@@ -1,6 +1,6 @@
 package Menus.Properties;
 
-import Utilities.*;
+import Utilities.ShowAlert;
 import MainMenu.DisplayOptions;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -11,9 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ShowProperties {
     private final Stage stage;
@@ -53,15 +52,12 @@ public class ShowProperties {
         propertiesTable.getColumns().add(maintenanceHistoryColumn);
 
         ObservableList<Property> properties = FXCollections.observableArrayList();
-        try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt
-                    .executeQuery("SELECT PropertyID, Type, Size, Location, Price, FurnishingStatus, MaintenanceHistory FROM Property");
-            while (rs.next()) {
-                properties.add(new Property(rs.getInt("PropertyID"), rs.getString("Type"), rs.getString("Size"),
-                        rs.getString("Location"), rs.getString("Price"), rs.getString("FurnishingStatus"), rs.getString("MaintenanceHistory")));
-            }
-        } catch (Exception e) {
+
+        try {
+            List<Property> allProperties = PropertyDAO.getAllProperties();
+            properties.addAll(allProperties);
+            propertiesTable.setItems(properties);
+        } catch (SQLException e) {
             ShowAlert.display("Database Error", "Failed to load properties: " + e.getMessage(),
                     Alert.AlertType.WARNING);
         }
@@ -112,7 +108,7 @@ public class ShowProperties {
 
                     removeButton.setOnAction(event -> {
                         RemoveProperty.removeProperty(property.getId());
-                        RefreshTable.refreshPropertiesTable(propertiesTable);
+                        new ShowProperties(stage, userRole).display();
                     });
                 }
             }

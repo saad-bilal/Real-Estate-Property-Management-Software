@@ -6,8 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShowAddPaymentForm {
@@ -33,18 +31,15 @@ public class ShowAddPaymentForm {
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-            try (Connection con = DBUtils.establishConnection();
-                 PreparedStatement pstmt = con.prepareStatement(
-                    "INSERT INTO Payments (LeaseID, TenantID, PaymentDate, Amount, PaymentType, Description, ReceiptNumber) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-
-                pstmt.setInt(1, Integer.parseInt(leaseIdField.getText()));
-                pstmt.setInt(2, Integer.parseInt(tenantIdField.getText()));
-                pstmt.setDate(3, java.sql.Date.valueOf(paymentDatePicker.getValue()));
-                pstmt.setString(4, amountField.getText());
-                pstmt.setString(5, paymentTypeField.getText());
-                pstmt.setString(6, descriptionField.getText());
-                pstmt.setString(7, receiptNumberField.getText());
-                pstmt.executeUpdate();
+            try {
+                PaymentDAO.addPayment(
+                        Integer.parseInt(leaseIdField.getText()),
+                        Integer.parseInt(tenantIdField.getText()),
+                        paymentDatePicker.getValue().toString(),
+                        amountField.getText(),
+                        paymentTypeField.getText(),
+                        descriptionField.getText(),
+                        receiptNumberField.getText());
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Payment Added");

@@ -11,7 +11,8 @@ public class Lease {
     private final String signatureDate;
     private final String status;
 
-    public Lease(int id, int propertyId, int tenantId, String startDate, String endDate, String monthlyRent, String securityDeposit, String signatureDate, String status) {
+    public Lease(int id, int propertyId, int tenantId, String startDate, String endDate, String monthlyRent,
+            String securityDeposit, String signatureDate, String status) {
         this.id = id;
         this.propertyId = propertyId;
         this.tenantId = tenantId;
@@ -24,13 +25,39 @@ public class Lease {
     }
 
     // Getter methods for each field
-    public int getId() { return id; }
-    public int getPropertyId() { return propertyId; }
-    public int getTenantId() { return tenantId; }
-    public String getStartDate() { return startDate; }
-    public String getEndDate() { return endDate; }
-    public String getMonthlyRent() { return monthlyRent; }
-    public String getSecurityDeposit() { return securityDeposit; }
-    public String getSignatureDate() { return signatureDate; }
-    public String getStatus() { return status; }
+    public int getId() {
+        return id;
+    }
+
+    public int getPropertyId() {
+        return propertyId;
+    }
+
+    public int getTenantId() {
+        return tenantId;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public String getMonthlyRent() {
+        return monthlyRent;
+    }
+
+    public String getSecurityDeposit() {
+        return securityDeposit;
+    }
+
+    public String getSignatureDate() {
+        return signatureDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

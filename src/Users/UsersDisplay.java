@@ -16,6 +16,5 @@ public class UsersDisplay {
     }
 
     public static void main(String[] args) {
-        // This main method would be used to launch the application
     }
 }

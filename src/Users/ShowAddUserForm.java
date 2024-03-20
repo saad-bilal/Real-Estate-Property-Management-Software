@@ -6,8 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShowAddUserForm {
@@ -36,18 +34,15 @@ public class ShowAddUserForm {
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-            try (Connection con = DBUtils.establishConnection();
-                 PreparedStatement pstmt = con.prepareStatement(
-                        "INSERT INTO Users (FirstName, LastName, Username, Password, Email, PhoneNumber, Role) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-
-                pstmt.setString(1, firstNameField.getText());
-                pstmt.setString(2, lastNameField.getText());
-                pstmt.setString(3, usernameField.getText());
-                pstmt.setString(4, passwordField.getText());
-                pstmt.setString(5, emailField.getText());
-                pstmt.setString(6, phoneNumberField.getText());
-                pstmt.setString(7, roleComboBox.getSelectionModel().getSelectedItem());
-                pstmt.executeUpdate();
+            try {
+                UserDAO.addUser(
+                        firstNameField.getText(),
+                        lastNameField.getText(),
+                        usernameField.getText(),
+                        passwordField.getText(),
+                        emailField.getText(),
+                        phoneNumberField.getText(),
+                        roleComboBox.getSelectionModel().getSelectedItem());
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("User Added");

@@ -1,13 +1,11 @@
 package Menus.Properties;
 
-import Utilities.*;
+import Utilities.ShowAlert;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShowEditPropertyForm {
@@ -34,28 +32,22 @@ public class ShowEditPropertyForm {
 
         Button submitButton = new Button("Update");
         submitButton.setOnAction(e -> {
-            try (Connection con = DBUtils.establishConnection();
-                    PreparedStatement pstmt = con.prepareStatement(
-                            "UPDATE Property SET Type = ?, Size = ?, Location = ?, Price = ?, FurnishingStatus = ?, MaintenanceHistory = ? WHERE PropertyID = ?")) {
-
-                pstmt.setString(1, typeField.getText());
-                pstmt.setString(2, sizeField.getText());
-                pstmt.setString(3, locationField.getText());
-                pstmt.setString(4, priceField.getText());
-                pstmt.setString(5, furnishingStatusField.getText());
-                pstmt.setString(6, maintenanceHistoryField.getText());
-                pstmt.setInt(7, property.getId());
-                pstmt.executeUpdate();
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Property Updated");
-                alert.setContentText("Property details updated successfully.");
-                alert.showAndWait();
-
+            try {
+                PropertyDAO.updateProperty(
+                        property.getId(),
+                        typeField.getText(),
+                        sizeField.getText(),
+                        locationField.getText(),
+                        priceField.getText(),
+                        furnishingStatusField.getText(),
+                        maintenanceHistoryField.getText());
+                ShowAlert.display("Property Updated", "Property details updated successfully.",
+                        Alert.AlertType.INFORMATION);
                 new ShowProperties(stage, this.userRole).display();
                 editPropertyStage.close();
             } catch (SQLException ex) {
-                ShowAlert.display("Database Error", "Failed to update property details.", Alert.AlertType.WARNING);
+                ShowAlert.display("Database Error", "Failed to update property details: " + ex.getMessage(),
+                        Alert.AlertType.WARNING);
             }
         });
 

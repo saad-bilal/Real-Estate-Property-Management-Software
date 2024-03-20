@@ -11,9 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class ShowLeases {
     private final Stage stage;
@@ -59,22 +57,15 @@ public class ShowLeases {
         leasesTable.getColumns().add(statusColumn);
 
         ObservableList<Lease> leases = FXCollections.observableArrayList();
-        try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt
-                    .executeQuery("SELECT LeaseID, PropertyID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit, SignatureDate, Status FROM LeaseAgreements");
-                    while (rs.next()) {
-                        leases.add(new Lease(rs.getInt("LeaseID"), rs.getInt("PropertyID"), rs.getInt("TenantID"),
-                                rs.getDate("StartDate").toString(), rs.getDate("EndDate").toString(),
-                                rs.getString("MonthlyRent"), rs.getString("SecurityDeposit"),
-                                rs.getDate("SignatureDate").toString(), rs.getString("Status")));
-                    }
-        } catch (Exception e) {
+        try {
+            leases.addAll(LeaseDAO.getAllLeaseAgreements());
+        } catch (SQLException e) {
             ShowAlert.display("Database Error", "Failed to load leases: " + e.getMessage(),
                     Alert.AlertType.WARNING);
         }
 
         leasesTable.setItems(leases);
+
 
         Button backButton = new Button("Back");
         backButton.setOnAction(e -> {
@@ -119,8 +110,17 @@ public class ShowLeases {
                     });
 
                     removeButton.setOnAction(event -> {
-                        RemoveLease.removeLease(lease.getId());
-                        RefreshTable.refreshLeasesTable(leasesTable);
+                        try {
+                            LeaseDAO.removeLeaseAgreement(lease.getId());
+                            leases.remove(lease);
+                            ShowAlert.display("Lease Removed",
+                                    "The lease has been successfully removed.",
+                                    Alert.AlertType.INFORMATION);
+                        } catch (SQLException ex) {
+                            ShowAlert.display("Database Error",
+                                    "Failed to remove lease: " + ex.getMessage(),
+                                    Alert.AlertType.WARNING);
+                        }
                     });
                 }
             }

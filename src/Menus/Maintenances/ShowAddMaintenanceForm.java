@@ -6,8 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShowAddMaintenanceForm {
@@ -33,18 +31,15 @@ public class ShowAddMaintenanceForm {
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-            try (Connection con = DBUtils.establishConnection();
-                 PreparedStatement pstmt = con.prepareStatement(
-                    "INSERT INTO MaintenanceRequests (PropertyID, TenantID, Description, ReportDate, Status, Priority, ResolutionDate) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-
-                pstmt.setInt(1, Integer.parseInt(propertyIdField.getText()));
-                pstmt.setInt(2, Integer.parseInt(tenantIdField.getText()));
-                pstmt.setString(3, descriptionField.getText());
-                pstmt.setDate(4, java.sql.Date.valueOf(reportDatePicker.getValue()));
-                pstmt.setString(5, statusField.getText());
-                pstmt.setString(6, priorityField.getText());
-                pstmt.setDate(7, resolutionDatePicker.getValue() != null ? java.sql.Date.valueOf(resolutionDatePicker.getValue()) : null);
-                pstmt.executeUpdate();
+            try {
+                MaintenanceDAO.addMaintenanceRequest(
+                        Integer.parseInt(propertyIdField.getText()),
+                        Integer.parseInt(tenantIdField.getText()),
+                        descriptionField.getText(),
+                        reportDatePicker.getValue().toString(),
+                        statusField.getText(),
+                        priorityField.getText(),
+                        resolutionDatePicker.getValue() != null ? resolutionDatePicker.getValue().toString() : null);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Maintenance Request Added");

@@ -15,5 +15,6 @@ public class PaymentsDisplay {
         new ShowPayments(stage, userRole).display();
     }
 
-    public static void main(String[] args) {    }
+    public static void main(String[] args) {
+    }
 }

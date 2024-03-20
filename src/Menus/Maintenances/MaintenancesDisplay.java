@@ -16,9 +16,5 @@ public class MaintenancesDisplay {
     }
 
     public static void main(String[] args) {
-        Stage stage = new Stage();
-        String userRole = "admin";
-        MaintenancesDisplay maintenanceDisplay = new MaintenancesDisplay(stage, userRole);
-        maintenanceDisplay.showMaintenances();
     }
 }

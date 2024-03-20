@@ -11,9 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ShowPayments {
     private final Stage stage;
@@ -56,18 +55,11 @@ public class ShowPayments {
         paymentsTable.getColumns().add(receiptNumberColumn);
 
         ObservableList<Payment> payments = FXCollections.observableArrayList();
-        try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt
-                    .executeQuery("SELECT PaymentID, LeaseID, TenantID, PaymentDate, Amount, PaymentType, Description, ReceiptNumber FROM Payments");
-                    while (rs.next()) {
-                        payments.add(new Payment(rs.getInt("PaymentID"), rs.getInt("LeaseID"), rs.getInt("TenantID"),
-                                rs.getDate("PaymentDate").toString(), rs.getString("Amount"), rs.getString("PaymentType"),
-                                rs.getString("Description"), rs.getString("ReceiptNumber")));
-                    }
-        } catch (Exception e) {
-            ShowAlert.display("Database Error", "Failed to load payments: " + e.getMessage(),
-                    Alert.AlertType.WARNING);
+        try {
+            List<Payment> allPayments = PaymentDAO.getAllPayments();
+            payments.addAll(allPayments);
+        } catch (SQLException e) {
+            ShowAlert.display("Database Error", "Failed to load payments: " + e.getMessage(), Alert.AlertType.WARNING);
         }
 
         paymentsTable.setItems(payments);
@@ -115,8 +107,13 @@ public class ShowPayments {
                     });
 
                     removeButton.setOnAction(event -> {
-                        RemovePayment.removePayment(payment.getId());
-                        RefreshTable.refreshPaymentsTable(paymentsTable);
+                        try {
+                            PaymentDAO.removePayment(payment.getId());
+                            payments.remove(payment);
+                            ShowAlert.display("Payment Removed", "The payment has been successfully removed.", Alert.AlertType.INFORMATION);
+                        } catch (SQLException ex) {
+                            ShowAlert.display("Database Error", "Failed to remove payment: " + ex.getMessage(), Alert.AlertType.WARNING);
+                        }
                     });
                 }
             }

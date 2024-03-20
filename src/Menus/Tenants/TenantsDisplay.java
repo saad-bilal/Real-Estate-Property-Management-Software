@@ -15,5 +15,6 @@ public class TenantsDisplay {
         new ShowTenants(stage, userRole).display();
     }
 
-    public static void main(String[] args) {    }
+    public static void main(String[] args) {
+    }
 }

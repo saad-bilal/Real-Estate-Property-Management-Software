@@ -28,18 +28,20 @@ public class ShowAddTenantForm {
         TextField phoneNumberField = new TextField();
         DatePicker moveInDatePicker = new DatePicker();
         DatePicker moveOutDatePicker = new DatePicker();
+        TextField paymentHistoryField = new TextField();
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
             try (Connection con = DBUtils.establishConnection();
                  PreparedStatement pstmt = con.prepareStatement(
-                    "INSERT INTO Tenant (TenantName, EmailAddress, PhoneNumber, MoveInDate, MoveOutDate) VALUES (?, ?, ?, ?, ?)")) {
+                     "INSERT INTO Tenant (TenantName, EmailAddress, PhoneNumber, MoveInDate, MoveOutDate, PaymentHistory) VALUES (?, ?, ?, ?, ?, ?)")) {
 
                 pstmt.setString(1, nameField.getText());
                 pstmt.setString(2, emailField.getText());
                 pstmt.setString(3, phoneNumberField.getText());
                 pstmt.setDate(4, java.sql.Date.valueOf(moveInDatePicker.getValue()));
                 pstmt.setDate(5, moveOutDatePicker.getValue() != null ? java.sql.Date.valueOf(moveOutDatePicker.getValue()) : null);
+                pstmt.setString(6, paymentHistoryField.getText());
                 pstmt.executeUpdate();
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -62,6 +64,7 @@ public class ShowAddTenantForm {
                 new Label("Phone Number:"), phoneNumberField,
                 new Label("Move-in Date:"), moveInDatePicker,
                 new Label("Move-out Date:"), moveOutDatePicker,
+                new Label("Payment History:"), paymentHistoryField,
                 submitButton);
 
         Scene scene = new Scene(layout, 300, 500);

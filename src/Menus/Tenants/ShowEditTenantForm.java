@@ -6,8 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShowEditTenantForm {
@@ -38,18 +36,15 @@ public class ShowEditTenantForm {
 
         Button submitButton = new Button("Update");
         submitButton.setOnAction(e -> {
-            try (Connection con = DBUtils.establishConnection();
-                 PreparedStatement pstmt = con.prepareStatement(
-                         "UPDATE Tenant SET TenantName = ?, EmailAddress = ?, PhoneNumber = ?, MoveInDate = ?, MoveOutDate = ?, PaymentHistory = ? WHERE TenantID = ?")) {
-
-                pstmt.setString(1, nameField.getText());
-                pstmt.setString(2, emailField.getText());
-                pstmt.setString(3, phoneNumberField.getText());
-                pstmt.setDate(4, java.sql.Date.valueOf(moveInDatePicker.getValue()));
-                pstmt.setDate(5, moveOutDatePicker.getValue() != null ? java.sql.Date.valueOf(moveOutDatePicker.getValue()) : null);
-                pstmt.setString(6, paymentHistoryField.getText());
-                pstmt.setInt(7, tenant.getId());
-                pstmt.executeUpdate();
+            try {
+                TenantDAO.updateTenant(
+                        tenant.getId(),
+                        nameField.getText(),
+                        emailField.getText(),
+                        phoneNumberField.getText(),
+                        moveInDatePicker.getValue().toString(),
+                        moveOutDatePicker.getValue() != null ? moveOutDatePicker.getValue().toString() : null,
+                        paymentHistoryField.getText());
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Tenant Updated");

@@ -1,13 +1,11 @@
 package Menus.Properties;
 
-import Utilities.*;
+import Utilities.ShowAlert;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShowAddPropertyForm {
@@ -32,27 +30,20 @@ public class ShowAddPropertyForm {
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-            try (Connection con = DBUtils.establishConnection();
-                 PreparedStatement pstmt = con.prepareStatement(
-                    "INSERT INTO Property (Type, Size, Location, Price, FurnishingStatus, MaintenanceHistory) VALUES (?, ?, ?, ?, ?, ?)")) {
-
-                pstmt.setString(1, typeField.getText());
-                pstmt.setString(2, sizeField.getText());
-                pstmt.setString(3, locationField.getText());
-                pstmt.setString(4, priceField.getText());
-                pstmt.setString(5, furnishingStatusField.getText());
-                pstmt.setString(6, maintenanceHistoryField.getText());
-                pstmt.executeUpdate();
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Property Added");
-                alert.setContentText("New property added successfully.");
-                alert.showAndWait();
-
-                new ShowProperties(stage, this.userRole).display();
+            try {
+                PropertyDAO.addProperty(
+                        typeField.getText(),
+                        sizeField.getText(),
+                        locationField.getText(),
+                        priceField.getText(),
+                        furnishingStatusField.getText(),
+                        maintenanceHistoryField.getText());
+                ShowAlert.display("Property Added", "New property added successfully.", Alert.AlertType.INFORMATION);
+                new ShowProperties(stage, userRole).display(); // Refresh the table
                 addPropertyStage.close();
             } catch (SQLException ex) {
-                ShowAlert.display("Database Error", "Failed to add new property.", Alert.AlertType.WARNING);
+                ShowAlert.display("Database Error", "Failed to add new property: " + ex.getMessage(),
+                        Alert.AlertType.WARNING);
             }
         });
 

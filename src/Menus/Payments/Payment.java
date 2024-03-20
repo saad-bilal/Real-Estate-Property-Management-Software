@@ -10,7 +10,8 @@ public class Payment {
     private final String description;
     private final String receiptNumber;
 
-    public Payment(int id, int leaseId, int tenantId, String paymentDate, String amount, String paymentType, String description, String receiptNumber) {
+    public Payment(int id, int leaseId, int tenantId, String paymentDate, String amount, String paymentType,
+            String description, String receiptNumber) {
         this.id = id;
         this.leaseId = leaseId;
         this.tenantId = tenantId;
@@ -21,13 +22,35 @@ public class Payment {
         this.receiptNumber = receiptNumber;
     }
 
-    // Getter methods for each field
-    public int getId() { return id; }
-    public int getLeaseId() { return leaseId; }
-    public int getTenantId() { return tenantId; }
-    public String getPaymentDate() { return paymentDate; }
-    public String getAmount() { return amount; }
-    public String getPaymentType() { return paymentType; }
-    public String getDescription() { return description; }
-    public String getReceiptNumber() { return receiptNumber; }
+    public int getId() {
+        return id;
+    }
+
+    public int getLeaseId() {
+        return leaseId;
+    }
+
+    public int getTenantId() {
+        return tenantId;
+    }
+
+    public String getPaymentDate() {
+        return paymentDate;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
 }

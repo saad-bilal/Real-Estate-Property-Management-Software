@@ -11,9 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ShowUsers {
     private final Stage stage;
@@ -28,6 +27,7 @@ public class ShowUsers {
         TableView<User> usersTable = new TableView<>();
         usersTable.setEditable(true);
 
+        // Define the columns for the users table
         TableColumn<User, Integer> idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn<User, String> firstNameColumn = new TableColumn<>("First Name");
@@ -52,16 +52,10 @@ public class ShowUsers {
         usersTable.getColumns().add(roleColumn);
 
         ObservableList<User> users = FXCollections.observableArrayList();
-        try (Connection con = DBUtils.establishConnection();
-                Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt
-                    .executeQuery("SELECT UserID, FirstName, LastName, Username, Email, PhoneNumber, Role FROM Users");
-            while (rs.next()) {
-                users.add(new User(rs.getInt("UserID"), rs.getString("FirstName"), rs.getString("LastName"),
-                        rs.getString("Username"), rs.getString("Email"), rs.getString("PhoneNumber"),
-                        rs.getString("Role")));
-            }
-        } catch (Exception e) {
+        try {
+            List<User> allUsers = UserDAO.getAllUsers();
+            users.addAll(allUsers);
+        } catch (SQLException e) {
             ShowAlert.display("Database Error", "Failed to load users: " + e.getMessage(), Alert.AlertType.WARNING);
         }
 
@@ -110,8 +104,15 @@ public class ShowUsers {
                     });
 
                     removeButton.setOnAction(event -> {
-                        RemoveUser.removeUser(user.getId());
-                        RefreshTable.refreshUsersTable(usersTable);
+                        try {
+                            UserDAO.removeUser(user.getId());
+                            users.remove(user);
+                            ShowAlert.display("User Removed", "The user has been successfully removed.",
+                                    Alert.AlertType.INFORMATION);
+                        } catch (SQLException ex) {
+                            ShowAlert.display("Database Error", "Failed to remove user: " + ex.getMessage(),
+                                    Alert.AlertType.WARNING);
+                        }
                     });
                 }
             }

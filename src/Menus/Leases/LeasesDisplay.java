@@ -18,7 +18,7 @@ public class LeasesDisplay {
     public static void main(String[] args) {
         // Example usage
         Stage stage = new Stage();
-        String userRole = "admin"; // Example user role
+        String userRole = "admin";
         LeasesDisplay leasesDisplay = new LeasesDisplay(stage, userRole);
         leasesDisplay.showLeases();
     }

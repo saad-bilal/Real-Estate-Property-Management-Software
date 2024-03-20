@@ -11,9 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ShowTenants {
     private final Stage stage;
@@ -53,19 +52,11 @@ public class ShowTenants {
         tenantsTable.getColumns().add(paymentHistoryColumn);
 
         ObservableList<Tenant> tenants = FXCollections.observableArrayList();
-        try (Connection con = DBUtils.establishConnection();
-             Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt
-                    .executeQuery("SELECT TenantID, TenantName, EmailAddress, PhoneNumber, MoveInDate, MoveOutDate, PaymentHistory FROM Tenant");
-                    while (rs.next()) {
-                        tenants.add(new Tenant(rs.getInt("TenantID"), rs.getString("TenantName"), rs.getString("EmailAddress"),
-                                rs.getString("PhoneNumber"), rs.getDate("MoveInDate").toString(),
-                                rs.getDate("MoveOutDate") != null ? rs.getDate("MoveOutDate").toString() : "",
-                                rs.getString("PaymentHistory")));
-                    }
-        } catch (Exception e) {
-            ShowAlert.display("Database Error", "Failed to load tenants: " + e.getMessage(),
-                    Alert.AlertType.WARNING);
+        try {
+            List<Tenant> allTenants = TenantDAO.getAllTenants();
+            tenants.addAll(allTenants);
+        } catch (SQLException e) {
+            ShowAlert.display("Database Error", "Failed to load tenants: " + e.getMessage(), Alert.AlertType.WARNING);
         }
 
         tenantsTable.setItems(tenants);
@@ -113,8 +104,15 @@ public class ShowTenants {
                     });
 
                     removeButton.setOnAction(event -> {
-                        RemoveTenant.removeTenant(tenant.getId());
-                        RefreshTable.refreshTenantsTable(tenantsTable);
+                        try {
+                            TenantDAO.removeTenant(tenant.getId());
+                            tenants.remove(tenant);
+                            ShowAlert.display("Tenant Removed", "The tenant has been successfully removed.",
+                                    Alert.AlertType.INFORMATION);
+                        } catch (SQLException ex) {
+                            ShowAlert.display("Database Error", "Failed to remove tenant: " + ex.getMessage(),
+                                    Alert.AlertType.WARNING);
+                        }
                     });
                 }
             }

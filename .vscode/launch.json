@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PaymentsDisplay",
+            "request": "launch",
+            "mainClass": "Menus.Payments.PaymentsDisplay",
+            "projectName": "RealEstatePropertyManagementSoftware_97770e36"
+        },
+        {
+            "type": "java",
             "name": "PropertiesDisplay",
             "request": "launch",
             "mainClass": "Menus.Properties.PropertiesDisplay",

@@ -9,7 +9,8 @@ public class User {
     private final String phoneNumber;
     private final String role;
 
-    public User(int id, String firstName, String lastName, String username, String email, String phoneNumber, String role) {
+    public User(int id, String firstName, String lastName, String username, String email, String phoneNumber,
+            String role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -19,11 +20,31 @@ public class User {
         this.role = role;
     }
 
-    public int getId() { return id; }
-    public String getFirstName() { return firstName; }
-    public String getLastName() { return lastName; }
-    public String getUsername() { return username; }
-    public String getEmail() { return email; }
-    public String getPhoneNumber() { return phoneNumber; }
-    public String getRole() { return role; }
+    public int getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getRole() {
+        return role;
+    }
 }

@@ -6,8 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShowEditUserForm {
@@ -37,18 +35,15 @@ public class ShowEditUserForm {
 
         Button submitButton = new Button("Update");
         submitButton.setOnAction(e -> {
-            try (Connection con = DBUtils.establishConnection();
-                 PreparedStatement pstmt = con.prepareStatement(
-                        "UPDATE Users SET FirstName = ?, LastName = ?, Username = ?, Email = ?, PhoneNumber = ?, Role = ? WHERE UserID = ?")) {
-
-                pstmt.setString(1, firstNameField.getText());
-                pstmt.setString(2, lastNameField.getText());
-                pstmt.setString(3, usernameField.getText());
-                pstmt.setString(4, emailField.getText());
-                pstmt.setString(5, phoneNumberField.getText());
-                pstmt.setString(6, roleComboBox.getSelectionModel().getSelectedItem());
-                pstmt.setInt(7, user.getId());
-                pstmt.executeUpdate();
+            try {
+                UserDAO.updateUser(
+                        user.getId(),
+                        firstNameField.getText(),
+                        lastNameField.getText(),
+                        usernameField.getText(),
+                        emailField.getText(),
+                        phoneNumberField.getText(),
+                        roleComboBox.getSelectionModel().getSelectedItem());
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("User Updated");

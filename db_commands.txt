@@ -75,7 +75,7 @@ VALUES
 (11, 'Ava Wilson', 'avawilson@example.com', '90123456', '2021-11-30', '2022-11-29', 'November 2021 - October 2022 rent');
 
 -- Lease Agreements Table Creation and Sample Data Insertion
-CREATE TABLE LeaseAgreements (
+CREATE TABLE leaseagreements (
     LeaseID INT PRIMARY KEY,
     PropertyID INT,
     TenantID INT,
